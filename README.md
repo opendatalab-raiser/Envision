@@ -112,7 +112,7 @@ If you use the Envision dataset or benchmark in your research, please cite the f
 ```bibtex
 @article{wei2025ggbench,
   title={Envision: Benchmarking Unified Understanding & Generation for Causal World Process Insights},
-  author={Juanxi Tian, Siyuan Li, He, Conghui and Wu, Lijun and Tan, Cheng},
+  author={Tian, Juanxi and Li, Siyuan and He, Conghui and Wu, Lijun and Tan, Cheng},
   journal={arXiv preprint arXiv:},
   year={2025}
 }
