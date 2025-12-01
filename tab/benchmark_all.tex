@@ -1,0 +1,40 @@
+\begin{table*}[htbp]
+    \centering
+    \caption{Comprehensive Performance Comparison of Text-to-Image Generation Models across Multiple Evaluation Dimensions for \textbf{Envision All Domains Average}}
+    \label{tab:model_comparison_average}
+    \resizebox{\textwidth}{!}{ % Resize to fit within the column width
+    \begin{tabular}{l*{12}{>{\centering\arraybackslash}p{1.5cm}}}
+    \toprule
+    \multirow{2}{*}{\textbf{Model}} & \multicolumn{12}{c}{\textbf{Evaluation Dimensions}} \\
+    \cmidrule(lr){2-13}
+     & {\footnotesize\centering\textbf{Semantic Consistency}} & {\footnotesize\centering\textbf{Factual Consistency}} & {\footnotesize\centering\textbf{Spatial-Temporal Consistency}} & {\footnotesize\centering\textbf{Consistency Score}} & {\footnotesize\centering\textbf{Expressiveness}} & {\footnotesize\centering\textbf{Artistic Quality}} & {\footnotesize\centering\textbf{Authenticity}} &
+     {\footnotesize\centering\textbf{Aesthetic Score}} &
+     {\footnotesize\centering\textbf{Physical Reliability}} & {\footnotesize\centering\textbf{Basic Properties}} & {\footnotesize\centering\textbf{Dynamics \& Interactivity}} &
+     {\footnotesize\centering\textbf{Physicality Score}} \\
+    \midrule
+    \rowcolor{blue!5}
+    \textbf{Dedicated Text-to-Image Models} & & & & & & & & & & & & \\
+    FLUX-dev & 54.11 & 56.30 & 40.98 & 50.37 & 71.05 & 75.66 & 53.02 & 66.60 & 45.23 & 58.97 & 45.84 & 49.96  \\
+    FLUX-pro-1.1 & 55.20 & 55.89 & 40.56 & 50.45 & \textbf{72.95} & \textbf{76.73} & 52.67 & \textbf{67.30} & 46.96 & 58.18 & 47.62 & 50.88  \\
+    FLUX-pro-1.1-ultra & 52.04 & 54.53 & 40.71 & 49.01 & 68.69 & 72.68 & 50.29 & 63.75 & 44.88 & 58.28 & 45.82 & 49.61  \\
+    FLUX-kontext-pro & 57.09 & 60.33 & \textbf{48.46} & 55.22 & 64.63 & 70.09 & \textbf{56.10} & 63.53 & \textbf{52.70} & \textbf{66.04} & \textbf{49.94} & \textbf{56.19}  \\
+    FLUX-kontext-max & \textbf{60.85} & \textbf{63.46} & 46.06 & \textbf{56.48} & 68.42 & 71.94 & 55.83 & 65.30 & 51.24 & 64.38 & 49.07 & 54.86  \\
+    SD-3.5-flash & 48.12 & 46.05 & 36.56 & 42.44 & 62.92 & 71.76 & 48.08 & 60.79 & 41.08 & 52.20 & 39.87 & 44.35  \\
+    SD-3.5-large & 40.82 & 50.52 & 33.84 & 43.30 & 63.02 & 67.32 & 45.89 & 58.62 & 41.01 & 53.64 & 40.73 & 45.08  \\
+    SD-3.5-medium & 49.79 & 50.89 & 35.64 & 44.08 & 61.65 & 67.86 & 48.86 & 59.35 & 41.66 & 54.88 & 42.29 & 46.23  \\
+    \rowcolor{red!5}
+    \textbf{Unified Multimodal Models (UMMs)} & & & & & & & & & & & & \\
+    GPT4o & \textbf{75.76} & \textbf{78.65} & \textbf{67.42} & \textbf{73.88} & 77.05 & 81.37 & \textbf{71.81} & \textbf{76.70} & \textbf{70.56} & \textbf{79.90} & \textbf{66.44} & \textbf{72.28}  \\
+    Gemini-2.5-Flash-Image & 69.12 & 73.20 & 58.71 & 66.92 & 73.29 & 75.65 & 64.10 & 70.95 & 62.68 & 74.45 & 59.50 & 65.52  \\
+    Seedream 4.0 & 66.15 & 66.78 & 56.79 & 63.18 & 73.54 & 76.12 & 58.61 & 69.32 & 60.05 & 69.83 & 56.91 & 62.24  \\
+    Qwen-Image & 61.16 & 59.88 & 53.20 & 58.03 & \textbf{79.54} & \textbf{82.57} & 58.05 & 73.23 & 55.97 & 67.11 & 54.69 & 59.22  \\
+    Hunyuan Image 3.0 & 57.42 & 58.14 & 46.03 & 53.78 & 73.08 & 76.05 & 53.48 & 67.40 & 49.54 & 61.34 & 50.70 & 53.81  \\
+    Bagel & 58.61 & 57.50 & 51.11 & 55.70 & 65.84 & 69.17 & 48.89 & 61.17 & 51.94 & 61.94 & 46.11 & 53.32  \\
+    Janus-Pro-7B & 52.29 & 55.05 & 41.51 & 49.54 & 63.26 & 64.86 & 45.96 & 57.90 & 44.40 & 53.64 & 44.63 & 47.52  \\
+    \bottomrule
+    \end{tabular}
+    }
+    \vspace{0.2cm}
+    \parbox{\linewidth}{
+    \footnotesize \textit{Note:} The table presents the average performance scores across all six scientific domains (Biology, Chemistry, Culture \& History, Geography, Meteorology, and Physics) for \textbf{Envision} All Domains Average} evaluation. Models are categorized into Dedicated Text-to-Image Models (blue background) and Unified Multimodal Models (red background). The evaluation dimensions include semantic consistency, factual consistency, spatial-temporal consistency, consistency score, aesthetic score, expressiveness, artistic quality, authenticity, physicality, basic properties, dynamics \& interactivity, and physical reliability.}
+    \end{table*}

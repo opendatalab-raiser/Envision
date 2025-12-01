@@ -1,0 +1,45 @@
+\begin{table*}[htbp]
+    \centering
+    % \vspace{-0.50em}
+    \caption{Comparing Envision Scores for T2I Models in Science and Culture Domains.}
+    \label{tab:model_comparison_comprehensive}
+    \vspace{-0.75em}
+    \small
+    \setlength{\tabcolsep}{1.2mm}{
+    % \resizebox{\textwidth}{!}{ 
+    \begin{tabular}{lccccccc}
+    \toprule
+    \multirow{2}{*}{\textbf{Model}} & \multicolumn{6}{c}{\textbf{Domain-Specific Performance}} & \multirow{2}{*}{\textbf{Overall}} \\
+    \cmidrule(lr){2-7}
+     & \textbf{Physics} & \textbf{Chemistry} & \textbf{Biology} & \textbf{Geography} & \textbf{Meteorology} & \textbf{Culture} & \\
+    \midrule
+    \rowcolor{blue!5}
+    \textbf{Open-Source T2I Models} & & & & & & & \\
+    FLUX-dev & 37.62 & 58.86 & 57.12 & 57.27 & 58.75 & 51.01 & 53.44 \\
+    FLUX-pro-1.1 & 39.52 & 58.52 & 56.15 & 54.29 & 57.97 & 57.62 & 54.01 \\
+    FLUX-pro-1.1-ultra & 39.69 & 55.08 & 56.51 & 54.54 & 53.15 & 54.27 & 52.21 \\
+    FLUX-kontext-pro & 43.78 & 61.72 & 61.36 & 55.00 & 58.41 & 63.45 & 57.29 \\
+    FLUX-kontext-max & 42.82 & 58.72 & 62.96 & 60.99 & 62.40 & 57.76 & 57.61 \\
+    SD-3.5-flash & 35.61 & 40.43 & 53.73 & 50.72 & 49.12 & 51.69 & 46.88 \\
+    SD-3.5-medium & 36.89 & 41.30 & 51.61 & 57.47 & 53.68 & 47.13 & 48.01 \\
+    SD-3.5-large & 36.07 & 42.32 & 50.24 & 51.12 & 55.43 & 47.34 & 47.09 \\
+    
+    \rowcolor{yellow!8}
+    \textbf{Closed-Source T2I Models} & & & & & & & \\
+    GPT-4o & 58.87 & 66.55 & 78.55 & 78.40 & 78.69 & 81.83 & \textbf{73.81} \\
+    Gemini-2.5-Flash-Image & 57.47 & 62.91 & 67.63 & 75.38 & 69.74 & 69.94 & 67.18 \\
+    
+    \rowcolor{red!5}
+    \textbf{Unified Multimodal Models} & & & & & & & \\
+    Seedream 4.0 & 51.06 & 57.27 & 76.92 & 66.09 & 67.35 & 65.55 & 64.04 \\
+    Qwen-Image & 47.98 & 56.22 & 76.40 & 63.81 & 58.94 & 66.01 & 61.56 \\
+    Hunyuan Image 3.0 & 37.84 & 49.76 & 51.27 & 70.49 & 67.74 & 62.10 & 56.53 \\
+    Bagel & 39.40 & 56.25 & 57.65 & 51.00 & 58.20 & 72.40 & 55.82 \\
+    Janus-Pro-7B & 36.24 & 44.08 & 53.09 & 55.05 & 62.70 & 50.52 & 50.28 \\
+    \bottomrule
+    \end{tabular}
+    }
+    \vspace{-1.75em}
+    %\parbox{\linewidth}{
+    %\footnotesize %\textit{Note:} All performance scores are represented by em-dashes (—) as per requirement. The table compares model performance across six distinct knowledge domains: Physics, Chemistry, Biology, Geography, Meteorology, and Culture, with an aggregated Overall score. Models are categorized into two groups: Dedicated Text-to-Image Models (blue background) and Unified Multimodal Models (red background). Performance metrics are normalized on a consistent scale, with higher values indicating superior performance.}
+    \end{table*}

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Professional multi-dimensional video quality assessment platform with AI comparison and advanced analytics">
+    <meta name="keywords" content="video quality, assessment, AI, analytics, evaluation">
+    <meta name="author" content="Envision Team">
+    <title>Envision</title>
+    
+    <!-- IE11 Compatibility -->
+    <!--[if IE]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.35.5/es6-shim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.35.5/es6-sham.min.js"></script>
+    <![endif]-->
+    
+    <!-- Polyfills for older browsers -->
+    <script>
+        // Polyfill for Object.assign
+        if (typeof Object.assign != 'function') {
+            Object.assign = function(target) {
+                'use strict';
+                if (target == null) {
+                    throw new TypeError('Cannot convert undefined or null to object');
+                }
+                var to = Object(target);
+                for (var index = 1; index < arguments.length; index++) {
+                    var nextSource = arguments[index];
+                    if (nextSource != null) {
+                        for (var nextKey in nextSource) {
+                            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+                                to[nextKey] = nextSource[nextKey];
+                            }
+                        }
+                    }
+                }
+                return to;
+            };
+        }
+        
+        // Polyfill for Array.from
+        if (!Array.from) {
+            Array.from = function(arrayLike) {
+                var result = [];
+                for (var i = 0; i < arrayLike.length; i++) {
+                    result.push(arrayLike[i]);
+                }
+                return result;
+            };
+        }
+        
+        // Polyfill for includes
+        if (!String.prototype.includes) {
+            String.prototype.includes = function(search, start) {
+                if (typeof start !== 'number') {
+                    start = 0;
+                }
+                if (start + search.length > this.length) {
+                    return false;
+                } else {
+                    return this.indexOf(search, start) !== -1;
+                }
+            };
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+    
+    <!-- Stylesheets with fallbacks -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Font Awesome with fallback -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👁️</text></svg>">
+    
+    <!-- Critical CSS for above-the-fold content -->
+    <style>
+        /* Critical CSS for immediate rendering */
+        body { margin: 0; padding: 0; font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f9ff; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 50px; color: #1e293b; padding: 40px 0; }
+        .logo h1 { font-family: 'Google Sans', sans-serif; font-size: 4.5rem; font-weight: 800; margin-bottom: 10px; color: #0ea5e9; }
+        .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f9ff; display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid rgba(14, 165, 233, 0.1); border-top: 4px solid #0ea5e9; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+    </div>
+    
+    <!-- Error Message Container -->
+    <div class="error-container" id="errorContainer" style="display: none;">
+        <div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Oops! Something went wrong</h3>
+            <p>We're having trouble loading the application. Please refresh the page or try again later.</p>
+            <button class="btn btn-primary" onclick="location.reload()">
+                <i class="fas fa-refresh"></i> Refresh Page
+            </button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <h1>Envision</h1>
+                <div class="logo-subtitle">Evaluation</div>
+            </div>
+            <p class="subtitle">Professional multi-dimensional image evaluation platform</p>
+            <div class="help-tips">
+                <div class="tip">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Select multi-image to view detailed scoring criteria and begin assessment</span>
+                </div>
+                <div class="tip">
+                    <i class="fas fa-keyboard"></i>
+                    <span>Shortcuts: Ctrl+S to save, Ctrl+R to reset, 0-5 for quick scoring</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Image Upload Area -->
+        <div class="upload-section" id="uploadSection">
+            <div class="upload-dropzone" id="dropZone">
+                <input type="file" id="imageInput" multiple accept="image/*" style="display: none">
+                <div class="upload-content">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Upload Images</h3>
+                    <p>Upload exactly 4 images for the sequence</p>
+                    <button class="btn btn-secondary" onclick="document.getElementById('imageInput').click()">
+                        Browse Files
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sequence Display Area -->
+        <div class="sequence-container" id="sequenceContainer" style="display: none;">
+            <div class="sequence-header">
+                <h2>Sequence Arrangement</h2>
+                <p>Drag and drop to reorder images or use the controls</p>
+            </div>
+            <div class="sequence-grid" id="sequenceGrid">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+
+        <!-- Scoring Criteria Section -->
+        <div class="criteria-section" id="criteriaSection" style="display: none;">
+            <h2><i class="fas fa-book"></i> Detailed Scoring Criteria</h2>
+            <div class="criteria-grid">
+                <div class="criteria-card">
+                    <h3><i class="fas fa-link"></i> Consistency (40%)</h3>
+                    <p>Evaluates Semantic, Factual, and Spatial-Temporal consistency across the entire 4-step sequence.</p>
+                    <div class="sub-criteria">
+                        <div class="sub-criterion">
+                            <h4>Semantic Consistency</h4>
+                            <p>Alignment between visual representation and conceptual meaning.</p>
+                            <details class="rubric-details">
+                                <summary>Scoring Rubric (0-5)</summary>
+                                <ul class="rubric-list">
+                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> Visual representation completely contradicts the core concept; the subject matter is wrong or misrepresented; the intended meaning is entirely lost or reversed.</li>
+                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Core theme is present but significantly distorted; key elements are misinterpreted or omitted; contradictory elements disrupt understanding.</li>
+                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Basic concept is recognizable but flawed in key details; the main idea is conveyed but with significant errors; some elements align while others are confusing.</li>
+                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Core concept is accurately captured, and the meaning is mostly clear; most elements align with the intended idea, but some minor inconsistencies persist.</li>
+                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> Both explicit and implicit meanings are captured well; a nuanced understanding is conveyed; rich semantic content with few inconsistencies.</li>
+                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Every conceptual nuance is perfectly expressed; visual representation fully aligns with intended meaning; flawless conceptual execution.</li>
+                                </ul>
+                            </details>
+                        </div>
+                        <div class="sub-criterion">
+                            <h4>Factual Consistency</h4>
+                            <p>Adherence to empirical facts and logical relationships.</p>
+                            <details class="rubric-details">
+                                <summary>Scoring Rubric (0-5)</summary>
+                                <ul class="rubric-list">
+                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> Violates fundamental physical laws or scientific principles; contains logical contradictions; depicts completely impossible scenarios.</li>
+                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Core factual relationships are incorrect or distorted; frequent contradictions with known facts; significant inaccuracies in science or history.</li>
+                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Most factual relationships correct but notable inaccuracies exist; core facts plausible but details wrong or incomplete.</li>
+                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Majority of factual elements accurate; logical relationships well-maintained; only minor inaccuracies in specific domains.</li>
+                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> High level of factual accuracy; complex relationships correctly represented; specialized knowledge precisely applied.</li>
+                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Complete empirical accuracy; no detectable factual errors or logical contradictions; exemplary research and execution.</li>
+                                </ul>
+                            </details>
+                        </div>
+                        <div class="sub-criterion">
+                            <h4>Spatial-Temporal Consistency</h4>
+                            <p>Coherence in spatial evolution and temporal progression.</p>
+                            <details class="rubric-details">
+                                <summary>Scoring Rubric (0-5)</summary>
+                                <ul class="rubric-list">
+                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> Spatial/temporal evolution entirely incoherent; no logical relationships; abrupt, random shifts; objects teleport without justification.</li>
+                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Significant inconsistencies hinder narrative flow; poor understanding of progression; movement and positioning illogical.</li>
+                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Some logical progression but evolution often unclear; movements plausible but lack cohesion or fail to respect causal logic.</li>
+                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Transitions mostly logical/plausible; smooth progression overall; occasional disruptions but general evolution remains coherent.</li>
+                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> Complex spatial/temporal changes well-executed; transitions smooth and consistent; sophisticated understanding of causal relationships.</li>
+                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Flawlessly consistent with causal logic; changes in position/timing align with story; impeccable execution of relationships.</li>
+                                </ul>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="criteria-card">
+                    <h3><i class="fas fa-cube"></i> Physicality (40%)</h3>
+                    <p>Evaluates physical properties and dynamics across the sequence.</p>
+                    <div class="sub-criteria">
+                        <div class="sub-criterion">
+                            <h4>Basic Properties</h4>
+                            <p>Accuracy in fundamental scene properties including object quantities, shapes, and proportions.</p>
+                            <details class="rubric-details">
+                                <summary>Scoring Rubric (0-5)</summary>
+                                <ul class="rubric-list">
+                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> Wrong number of major objects; impossible geometric relationships; completely unrealistic proportions.</li>
+                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Significant errors in object counts (>30% wrong); major shape distortions; poor geometric understanding.</li>
+                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Approximate object counts generally correct within 20%; recognizable but imperfect shapes; basic relationships mostly maintained.</li>
+                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Object counts within 15%; shapes accurately represented with minor flaws; good geometric consistency.</li>
+                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> Precise object quantities; well-defined shapes; sophisticated geometric relationships; excellent proportional accuracy.</li>
+                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Perfect object counts and distributions; mathematically precise shapes; flawless geometric relationships.</li>
+                                </ul>
+                            </details>
+                        </div>
+                        <div class="sub-criterion">
+                            <h4>Dynamics & Interactivity</h4>
+                            <p>Realism in motion trajectories, force interactions, and object behaviors.</p>
+                            <details class="rubric-details">
+                                <summary>Scoring Rubric (0-5)</summary>
+                                <ul class="rubric-list">
+                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> Motion trajectories completely unrealistic; impossible force interactions; objects interact in physically impossible ways.</li>
+                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Major motion trajectory errors; unrealistic force applications; poor understanding of dynamics; interaction patterns wrong.</li>
+                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Basic motion trajectories generally plausible; simple force interactions mostly correct; adequate but imperfect dynamics.</li>
+                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Good motion trajectory realism; proper force applications; technically sound dynamics; convincing interaction patterns.</li>
+                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> Sophisticated motion trajectories; complex force interactions handled well; professional-level dynamics; realistic interactions.</li>
+                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Perfect motion physics throughout; flawless force interactions; exemplary dynamics; indistinguishable from real interactions.</li>
+                                </ul>
+                            </details>
+                        </div>
+                        <div class="sub-criterion">
+                            <h4>Physical Reliability</h4>
+                            <p>Adherence to fundamental physical laws across the sequence.</p>
+                            <details class="rubric-details">
+                                <summary>Scoring Rubric (0-5)</summary>
+                                <ul class="rubric-list">
+                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> Spatial evolution completely illogical/random; objects appear/disappear without cause; chaotic movements.</li>
+                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Major inconsistencies in movement/evolution; poor understanding of physical progression; frequent illogical transitions.</li>
+                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Basic spatial progression generally logical but has flaws; some movements lack smoothness; plausible overall but with inconsistencies.</li>
+                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Spatial evolution mostly logical/coherent; reasonable continuity; minor issues in timing or complex transitions.</li>
+                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> Spatial progression consistently logical; complex movements handled adeptly; strong temporal coherence.</li>
+                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Spatial-temporal evolution perfectly logical, fluid, physically plausible; flawless continuity and natural progression.</li>
+                                </ul>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="criteria-card">
+                    <h3><i class="fas fa-palette"></i> Aesthetic (20%)</h3>
+                    <p>Evaluates overall aesthetic quality across the sequence.</p>
+                    <div class="sub-criteria">
+                        <div class="sub-criterion">
+                            <h4>Expressiveness</h4>
+                            <p>The emotional impact and visual storytelling conveyed through the sequence.</p>
+                            <details class="rubric-details">
+                                <summary>Scoring Rubric (0-5)</summary>
+                                <ul class="rubric-list">
+                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> No emotional depth or visual narrative; elements lack cohesion; chaotic design with no connection.</li>
+                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Minimal emotional expression; poorly communicated narrative; conflicting elements detract from message.</li>
+                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Simple arrangement with limited expression; some narrative effort but flow is basic; uneven balance.</li>
+                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Clear/effective emotional expression; visual flow supports narrative; balanced elements guide attention.</li>
+                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> Strong emotional engagement; dynamic arrangement supports compelling narrative; sophisticated design choices.</li>
+                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Exceptional emotional resonance; perfectly executed narrative; masterful expressiveness telling a compelling story.</li>
+                                </ul>
+                            </details>
+                        </div>
+                        <div class="sub-criterion">
+                            <h4>Artistic Quality</h4>
+                            <p>Overall aesthetic appeal, style coherence, and artistic merit.</p>
+                            <details class="rubric-details">
+                                <summary>Scoring Rubric (0-5)</summary>
+                                <ul class="rubric-list">
+                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> No coherent style; elements clash severely; visually painful; complete lack of artistic consideration.</li>
+                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Inappropriate style choices; poor visual appeal; unbalanced elements; amateurish execution.</li>
+                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Functional but unrefined aesthetic; adequate visual appeal; simple style application; limited effectiveness.</li>
+                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Coherent style; good aesthetic relationships; appropriate tone; technically sound execution; pleasing appearance.</li>
+                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> Sophisticated artistic execution; strong emotional impact; complex relationships handled well; professional quality.</li>
+                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Perfect aesthetic harmony; innovative style; flawless execution; exemplary storytelling; world-class design.</li>
+                                </ul>
+                            </details>
+                        </div>
+                        <div class="sub-criterion">
+                            <h4>Authenticity</h4>
+                            <p>The believability and naturalness of the elements.</p>
+                            <details class="rubric-details">
+                                <summary>Scoring Rubric (0-5)</summary>
+                                <ul class="rubric-list">
+                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> Sequence looks completely artificial; lacks realism; obvious artifacts; cartoonish with no reality connection.</li>
+                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Major unrealistic elements dominate; obvious artifacts; unnatural lighting/textures; feels clearly synthetic.</li>
+                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Generally believable but noticeable artificial elements; some unnatural aspects; overall somewhat convincing.</li>
+                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Good level of realism; minor artificial elements; generally convincing; some minor issues in complex areas.</li>
+                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> Very believable; approaches photographic quality; subtle details enhance realism; artificial elements barely detectable.</li>
+                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Indistinguishable from real photography; perfect realism; flawless material representation; seamless authenticity.</li>
+                                </ul>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="criteria-actions">
+                <button class="btn btn-primary" onclick="startAssessment()">
+                    <i class="fas fa-check"></i> Start Assessment
+                </button>
+            </div>
+        </div>
+
+        <!-- Scoring Section -->
+        <div class="scoring-section" id="scoringSection" style="display: none;">
+            <h2><i class="fas fa-clipboard-check"></i> Assessment</h2>
+            <div class="scoring-actions">
+                <button class="btn btn-secondary" onclick="document.getElementById('criteriaSection').style.display='block'">
+                    <i class="fas fa-book"></i> View Criteria
+                </button>
+            </div>
+            
+            <!-- Consistency Scoring -->
+            <div class="score-card">
+                <div class="score-header">
+                    <h3><i class="fas fa-link"></i> Consistency</h3>
+                    <span class="score-value" id="consistencyScore">0.0</span>
+                </div>
+                <div class="sub-score-container">
+                    <div class="sub-score">
+                        <label for="semantic_consistency">Semantic Consistency</label>
+                        <div class="sub-score-control">
+                            <input type="range" id="semantic_consistency" min="0" max="5" step="0.1" value="0">
+                            <span class="sub-score-value" id="semantic_consistencyValue">0</span>
+                        </div>
+                    </div>
+                    <div class="sub-score">
+                        <label for="factual_consistency">Factual Consistency</label>
+                        <div class="sub-score-control">
+                            <input type="range" id="factual_consistency" min="0" max="5" step="0.1" value="0">
+                            <span class="sub-score-value" id="factual_consistencyValue">0</span>
+                        </div>
+                    </div>
+                    <div class="sub-score">
+                        <label for="spatial_temporal_consistency">Spatial-Temporal Consistency</label>
+                        <div class="sub-score-control">
+                            <input type="range" id="spatial_temporal_consistency" min="0" max="5" step="0.1" value="0">
+                            <span class="sub-score-value" id="spatial_temporal_consistencyValue">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Physicality Scoring -->
+            <div class="score-card">
+                <div class="score-header">
+                    <h3><i class="fas fa-cube"></i> Physicality</h3>
+                    <span class="score-value" id="physicalityScore">0.0</span>
+                </div>
+                <div class="sub-score-container">
+                    <div class="sub-score">
+                        <label for="basic_properties">Basic Properties</label>
+                        <div class="sub-score-control">
+                            <input type="range" id="basic_properties" min="0" max="5" step="0.1" value="0">
+                            <span class="sub-score-value" id="basic_propertiesValue">0</span>
+                        </div>
+                    </div>
+                    <div class="sub-score">
+                        <label for="dynamics_interactivity">Dynamics & Interactivity</label>
+                        <div class="sub-score-control">
+                            <input type="range" id="dynamics_interactivity" min="0" max="5" step="0.1" value="0">
+                            <span class="sub-score-value" id="dynamics_interactivityValue">0</span>
+                        </div>
+                    </div>
+                    <div class="sub-score">
+                        <label for="physical_reliability">Physical Reliability</label>
+                        <div class="sub-score-control">
+                            <input type="range" id="physical_reliability" min="0" max="5" step="0.1" value="0">
+                            <span class="sub-score-value" id="physical_reliabilityValue">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aesthetic Scoring -->
+            <div class="score-card">
+                <div class="score-header">
+                    <h3><i class="fas fa-palette"></i> Aesthetic</h3>
+                    <span class="score-value" id="aestheticScore">0.0</span>
+                </div>
+                <div class="sub-score-container">
+                    <div class="sub-score">
+                        <label for="expressiveness">Expressiveness</label>
+                        <div class="sub-score-control">
+                            <input type="range" id="expressiveness" min="0" max="5" step="0.1" value="0">
+                            <span class="sub-score-value" id="expressivenessValue">0</span>
+                        </div>
+                    </div>
+                    <div class="sub-score">
+                        <label for="artistic_quality">Artistic Quality</label>
+                        <div class="sub-score-control">
+                            <input type="range" id="artistic_quality" min="0" max="5" step="0.1" value="0">
+                            <span class="sub-score-value" id="artistic_qualityValue">0</span>
+                        </div>
+                    </div>
+                    <div class="sub-score">
+                        <label for="authenticity">Authenticity</label>
+                        <div class="sub-score-control">
+                            <input type="range" id="authenticity" min="0" max="5" step="0.1" value="0">
+                            <span class="sub-score-value" id="authenticityValue">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Score Display -->
+            <div class="total-score">
+                <h3><i class="fas fa-trophy"></i> Total Score</h3>
+                <div class="total-score-value" id="totalScore">0.0</div>
+                <div class="score-breakdown">
+                    <div class="breakdown-item">
+                        <span>Consistency:</span>
+                        <span id="consistencyBreakdown">0.0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>Causality:</span>
+                        <span id="causalityBreakdown">0.0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>Aesthetic:</span>
+                        <span id="aestheticBreakdown">0.0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>Physicality:</span>
+                        <span id="physicalityBreakdown">0.0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Comparison Section -->
+            <div class="ai-comparison-section" id="aiComparisonSection" style="display: none;">
+                <h3><i class="fas fa-chart-line"></i> AI vs Human Analysis</h3>
+                <div class="comparison-content">
+                    <!-- Quick Input Section -->
+                    <div class="quick-input-section">
+                        <p class="input-description">Enter AI scores for comparison analysis:</p>
+                        <div class="input-grid">
+                            <div class="input-item">
+                                <label for="aiConsistencyInput">Consistency</label>
+                                <input type="number" id="aiConsistencyInput" min="0" max="5" step="0.1" value="0">
+                            </div>
+                            <div class="input-item">
+                                <label for="aiAestheticInput">Aesthetic</label>
+                                <input type="number" id="aiAestheticInput" min="0" max="5" step="0.1" value="0">
+                            </div>
+                            <div class="input-item">
+                                <label for="aiPhysicalityInput">Physicality</label>
+                                <input type="number" id="aiPhysicalityInput" min="0" max="5" step="0.1" value="0">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="generateAnalysisBtn">
+                            <i class="fas fa-chart-bar"></i> Generate Analysis
+                        </button>
+                    </div>
+
+                    <!-- Analysis Results -->
+                    <div class="analysis-results" id="analysisResults" style="display: none;">
+                        <!-- Score Comparison Visualization -->
+                        <div class="score-comparison-viz">
+                            <h4><i class="fas fa-balance-scale"></i> Score Comparison</h4>
+                            <div class="comparison-chart">
+                                <canvas id="comparisonChart" width="800" height="400"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Correlation Analysis -->
+                        <div class="correlation-viz">
+                            <h4><i class="fas fa-project-diagram"></i> Correlation Analysis</h4>
+                            <div class="correlation-grid">
+                                <div class="correlation-chart">
+                                    <canvas id="correlationChart" width="400" height="300"></canvas>
+                                </div>
+                                <div class="correlation-metrics">
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-link"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <h5>Pearson Correlation</h5>
+                                            <div class="metric-value" id="pearsonValue">-</div>
+                                            <div class="metric-description">Linear relationship strength</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-chart-line"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <h5>Spearman Correlation</h5>
+                                            <div class="metric-value" id="spearmanValue">-</div>
+                                            <div class="metric-description">Monotonic relationship</div>
+                                        </div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-ruler"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <h5>Mean Absolute Error</h5>
+                                            <div class="metric-value" id="maeValue">-</div>
+                                            <div class="metric-description">Average difference</div>
+                                        </div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-square-root-alt"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <h5>Root Mean Square Error</h5>
+                                            <div class="metric-value" id="rmseValue">-</div>
+                                            <div class="metric-description">Standard deviation of errors</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Agreement Analysis -->
+                        <div class="agreement-analysis">
+                            <h4><i class="fas fa-handshake"></i> Agreement Analysis</h4>
+                            <div class="agreement-grid">
+                                <div class="agreement-chart">
+                                    <canvas id="agreementChart" width="400" height="300"></canvas>
+                                </div>
+                                <div class="agreement-summary">
+                                    <div class="agreement-level" id="agreementLevel">
+                                        <div class="level-icon">
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <div class="level-content">
+                                            <h5>Agreement Level</h5>
+                                            <div class="level-value" id="agreementValue">-</div>
+                                            <div class="level-description" id="agreementDescription">-</div>
+                                        </div>
+                                    </div>
+                                    <div class="consistency-index">
+                                        <div class="index-icon">
+                                            <i class="fas fa-check-circle"></i>
+                                        </div>
+                                        <div class="index-content">
+                                            <h5>Consistency Index</h5>
+                                            <div class="index-value" id="consistencyValue">-</div>
+                                            <div class="index-description">Overall consistency score</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detailed Metrics Table -->
+                        <div class="metrics-table-section">
+                            <h4><i class="fas fa-table"></i> Detailed Metrics</h4>
+                            <div class="metrics-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Metric</th>
+                                            <th>Human Score</th>
+                                            <th>AI Score</th>
+                                            <th>Difference</th>
+                                            <th>Agreement</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Consistency</td>
+                                            <td id="humanConsistency">-</td>
+                                            <td id="aiConsistency">-</td>
+                                            <td id="diffConsistency">-</td>
+                                            <td id="agreeConsistency">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Aesthetic Quality</td>
+                                            <td id="humanAesthetic">-</td>
+                                            <td id="aiAesthetic">-</td>
+                                            <td id="diffAesthetic">-</td>
+                                            <td id="agreeAesthetic">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Physicality</td>
+                                            <td id="humanPhysicality">-</td>
+                                            <td id="aiPhysicality">-</td>
+                                            <td id="diffPhysicality">-</td>
+                                            <td id="agreePhysicality">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-secondary" id="resetBtn">
+                    <i class="fas fa-undo"></i> Reset Scores
+                </button>
+                <button class="btn btn-ai" id="aiScoreBtn">
+                    <i class="fas fa-chart-line"></i> Show AI Analysis
+                </button>
+                <button class="btn btn-primary" id="saveBtn">
+                    <i class="fas fa-save"></i> Save Assessment
+                </button>
+                <button class="btn btn-danger" id="clearAllBtn">
+                    <i class="fas fa-trash"></i> Clear All Data
+                </button>
+            </div>
+        </div>
+
+        <!-- Assessment History -->
+        <div class="history-section" id="historySection" style="display: none;">
+            <h2><i class="fas fa-history"></i> Assessment History</h2>
+            <div class="history-list" id="historyList">
+                <!-- History records will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
