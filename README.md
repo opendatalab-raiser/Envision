@@ -64,7 +64,7 @@ python eval.py \
     --image_dir /path/to/your/generated/images \
     --output_dir /path/to/save/results \
     --api_key YOUR_OPENAI_API_KEY \
-    --model gpt-4o \
+    --model chatgpt-to-latest \
     --result_full full_results.json \
     --result_scores scores.jsonl \
     --max_workers 5
