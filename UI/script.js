@@ -353,10 +353,12 @@ function initializeEventListeners() {
         if (input) {
             // Remove existing listeners if any to prevent duplicates (though initializeEventListeners is called once)
             // Using a clean closure for event listener
-            input.addEventListener('input', function(e) {
-                var value = parseFloat(e.target.value);
-                updateScore(key, value);
-                addSliderFeedback(e.target);
+            ['input', 'change'].forEach(function(eventType) {
+                input.addEventListener(eventType, function(e) {
+                    var value = parseFloat(e.target.value);
+                    updateScore(key, value);
+                    addSliderFeedback(e.target);
+                });
             });
             
             // Initialize slider feedback immediately
