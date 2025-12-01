@@ -23,7 +23,7 @@ git clone [https://huggingface.co/datasets/opendatalab-raiser/Envision](https://
 
 ## 📐 Evaluation
 
-The evaluation of generated sequential images is managed by the `eval.py` script, which automates the quality assessment using a commercial LLM (e.g., OpenAI models) as the judge. The scoring adheres to a strict hierarchical protocol.
+The evaluation of generated sequential images is managed by the `eval.py` script, which automates the quality assessment using a commercial VLM (e.g., OpenAI models) as the judge. The scoring adheres to a strict hierarchical protocol.
 
 ### 1\. Evaluation Dimensions and Weights
 
@@ -90,6 +90,19 @@ python eval.py \
 For the latest official results and model rankings on the Envision benchmark, please visit our dedicated leaderboard website:
 
 **[https://opendatalab-raiser.github.io/Envision/](https://opendatalab-raiser.github.io/Envision/)**
+
+-----
+## 🌐 Community Contribution
+
+We strongly encourage the research community to expand and enhance the Envision benchmark. We welcome contributions in the form of new model results, additional evaluation metrics, or new causal process categories to further challenge the capabilities of unified multimodal models.
+
+How to Contribute:
+
+Submit New Results: If you have evaluated a novel model on the Envision benchmark using the provided eval.py script, please submit your quantitative results to us. We will periodically update the official leaderboard to reflect the state-of-the-art.
+
+Code and Data Extensions: We welcome pull requests (git pull request) for any improvements to the evaluation script, bug fixes, or the inclusion of supplementary causal event data to diversify the benchmark's coverage.
+
+By collaborating, we can ensure the Envision benchmark remains a robust and evolving resource for measuring true world knowledge internalization and dynamic process modeling in multimodal generation.
 
 -----
 
