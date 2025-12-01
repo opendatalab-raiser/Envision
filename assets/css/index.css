@@ -179,6 +179,23 @@ body {
   margin: 0;
 }
 
+/* Custom Key Figures Carousel */
+.key-figures-carousel {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    min-height: 400px; /* Match likely image height */
+}
+
+.key-figures-carousel .figure-item {
+    width: 100%;
+    transition: opacity 0.3s ease;
+}
+.key-figures-carousel .figure-item img {
+    display: block;
+    margin: 0 auto;
+}
+
 .animals {
     aspect-ratio: 512 / 364;
 }

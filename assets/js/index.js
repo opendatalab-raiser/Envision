@@ -34,20 +34,45 @@ $(document).ready(function() {
 			slidesToShow: 1,
 			loop: true,
 			infinite: true,
-			autoplay: false,
-			autoplaySpeed: 3000,
+			autoplay: false, // Disable autoplay to let user control manually
+			autoplaySpeed: 5000, 
+			pauseOnHover: true,
     }
 
-		// Initialize all div with carousel class
+    // Initialize all div with carousel class
     var carousels = bulmaCarousel.attach('.carousel', options);
     window.carousels = carousels; // Export to window for debugging/access
 
+    // Force autoplay start for all carousels to ensure it works
+    if (carousels && carousels.length > 0) {
+        carousels.forEach(function(carousel) {
+            if (carousel.options.autoplay && carousel._autoplay) {
+                console.log('Forcing autoplay start for carousel:', carousel.element.id);
+                carousel._autoplay.start();
+            }
+        });
+    }
+
+
     // Expose moveCarousel globally
     window.moveCarousel = function(carouselId, direction) {
-        // Attempt 1: Use the instance directly if available in the global array
+        console.log('moveCarousel called:', carouselId, direction);
+        var element = document.getElementById(carouselId);
+        
+        // Attempt 1: Check for direct property on DOM element
+        if (element && element.bulmaCarousel) {
+            console.log('Using element.bulmaCarousel');
+            if (direction === 'next') element.bulmaCarousel.next();
+            else element.bulmaCarousel.previous();
+            return;
+        }
+
+        // Attempt 2: Check global instances array
         if (window.carousels) {
             for(var i=0; i<window.carousels.length; i++) {
-                if (window.carousels[i].element.id === carouselId) {
+                // Check if the instance's element matches our ID
+                if (window.carousels[i].element && window.carousels[i].element.id === carouselId) {
+                    console.log('Found instance in window.carousels');
                     if (direction === 'next') window.carousels[i].next();
                     else window.carousels[i].previous();
                     return;
@@ -55,28 +80,56 @@ $(document).ready(function() {
             }
         }
 
-        // Attempt 2: Find internal buttons via DOM traversal
-        // The bulma-carousel often wraps the target element or modifies structure.
-        // Usually structure: .slider > .slider-container > #carouselId
-        // Buttons are siblings of .slider-container
-        
-        var element = document.getElementById(carouselId);
+        // Attempt 3: Find and click the internal navigation buttons
+        // These are usually created by bulma-carousel inside the wrapper
         if (element) {
-            // Look for the closest '.slider' or '.carousel' wrapper
-            // bulma-carousel adds 'slider' class to wrapper
-            var wrapper = element.closest('.slider'); 
-            if (!wrapper) wrapper = element.closest('.carousel');
+            console.log('Searching for internal buttons');
             
-            if (wrapper) {
-                var btn = wrapper.querySelector('.slider-navigation-' + direction);
-                if (btn) {
-                    btn.click();
-                    return;
-                }
+            // bulma-carousel usually wraps the original element in a .carousel or .slider wrapper
+            var wrapper = element.closest('.carousel') || element.closest('.slider');
+            if (!wrapper) wrapper = element; // Fallback to checking element itself if wrapper not found
+
+            // Look for the slider-navigation buttons
+            var navBtn = wrapper.querySelector('.slider-navigation-' + direction);
+            if (navBtn) {
+                console.log('Found internal button in wrapper, simulating click');
+                navBtn.click();
+                return;
+            }
+            
+            // Broader search if the structure is unexpected
+            var navBtns = wrapper.querySelectorAll('.slider-navigation-' + direction);
+            if (navBtns.length > 0) {
+                console.log('Found internal button in wrapper (fallback), simulating click');
+                navBtns[0].click();
+                return;
             }
         }
         
         console.error('moveCarousel: Could not find carousel instance or buttons for', carouselId);
+    }
+
+    // Custom Carousel Logic for Key Figures
+    var currentFigureIndex = 0;
+    window.switchFigure = function(direction) {
+        var items = document.querySelectorAll('#key-figures-carousel .figure-item');
+        if (items.length === 0) return;
+
+        // Hide current
+        items[currentFigureIndex].style.display = 'none';
+        items[currentFigureIndex].classList.remove('active');
+
+        // Calculate next
+        currentFigureIndex += direction;
+        if (currentFigureIndex >= items.length) {
+            currentFigureIndex = 0;
+        } else if (currentFigureIndex < 0) {
+            currentFigureIndex = items.length - 1;
+        }
+
+        // Show next
+        items[currentFigureIndex].style.display = 'block';
+        items[currentFigureIndex].classList.add('active');
     }
 
     // Loop on each carousel initialized
@@ -105,6 +158,7 @@ $(document).ready(function() {
     }, false);*/
     preloadInterpolationImages();
 
+    /*
     $('#interpolation-slider').on('input', function(event) {
       setInterpolationImage(this.value);
     });
@@ -112,5 +166,6 @@ $(document).ready(function() {
     $('#interpolation-slider').prop('max', NUM_INTERP_FRAMES - 1);
 
     bulmaSlider.attach();
+    */
 
 })

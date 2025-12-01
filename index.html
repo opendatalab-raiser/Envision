@@ -294,16 +294,20 @@
         color: #666 !important;
     }
 
-    /* PDF Viewer in Carousel */
+    /* PDF Viewer in Carousel - Renamed to keep generic but styled for images */
     .pdf-container {
         width: 100%;
-        height: 600px;
+        height: auto; /* Changed from fixed 600px to auto to fit images naturally */
+        min-height: 400px; /* Ensure some height */
         border: none;
         border-radius: 8px;
         overflow: hidden;
         background: white;
         box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
-        pointer-events: none; /* Disable interaction with PDF to allow dragging carousel */
+        pointer-events: auto; /* Re-enable interaction now that it is images */
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     /* Carousel Navigation - Make visible and functional */
@@ -448,7 +452,6 @@
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
       <a class="navbar-item" href="#abstract">Abstract</a>
-      <a class="navbar-item" href="#framework">Framework</a>
       <a class="navbar-item" href="#domains">Domains</a>
       <a class="navbar-item" href="#examples">Examples</a>
       <a class="navbar-item" href="#evaluation">Evaluation</a>
@@ -503,15 +506,6 @@
             <div class="publication-links">
               <!-- PDF Link. -->
               <span class="link-block">
-                <a href="IMAGINE_paper.pdf"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fas fa-file-pdf"></i>
-                  </span>
-                  <span>Paper</span>
-                </a>
-              </span>
-              <span class="link-block">
                 <a href="https://arxiv.org/abs/"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
@@ -557,47 +551,46 @@
     <div class="columns is-centered">
       <div class="column is-full-width">
         
-        <div id="figures-carousel" class="carousel results-carousel">
+        <div id="key-figures-carousel" class="key-figures-carousel">
             <!-- New Pipeline -->
-            <div class="item">
+            <div class="figure-item active">
                 <div class="pdf-container">
-                    <iframe src="./assets/images/New_Pipeline.pdf" width="100%" height="100%" style="border: none;"></iframe>
+                    <img src="./assets/images/New_Pipeline.jpg" alt="Pipeline Overview" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <p class="has-text-centered mt-2"><strong>Figure 1:</strong> Pipeline Overview</p>
             </div>
             <!-- Domain -->
-            <div class="item">
+            <div class="figure-item" style="display: none;">
                 <div class="pdf-container">
-                    <!-- Using iframe instead of embed for better interaction isolation -->
-                    <iframe src="./assets/images/Domain.pdf" width="100%" height="100%" style="border: none;"></iframe>
+                    <img src="./assets/images/Domain.jpg" alt="Domain Overview" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <p class="has-text-centered mt-2"><strong>Figure 2:</strong> Domain Overview</p>
             </div>
             <!-- MI -->
-            <div class="item">
+            <div class="figure-item" style="display: none;">
                 <div class="pdf-container">
-                    <iframe src="./assets/images/MI.pdf" width="100%" height="100%" style="border: none;"></iframe>
+                    <img src="./assets/images/MI.jpg" alt="Method Illustration" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <p class="has-text-centered mt-2"><strong>Figure 3:</strong> Method Illustration</p>
             </div>
             <!-- New Case -->
-            <div class="item">
+            <div class="figure-item" style="display: none;">
                 <div class="pdf-container">
-                    <iframe src="./assets/images/New_case.pdf" width="100%" height="100%" style="border: none;"></iframe>
+                    <img src="./assets/images/New_case.jpg" alt="Case Studies" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <p class="has-text-centered mt-2"><strong>Figure 4:</strong> Case Studies</p>
             </div>
             <!-- Evidence 1 -->
-            <div class="item">
+            <div class="figure-item" style="display: none;">
                 <div class="pdf-container">
-                    <iframe src="./assets/images/evi_1.pdf" width="100%" height="100%" style="border: none;"></iframe>
+                    <img src="./assets/images/evi_1.jpg" alt="Evidence Analysis I" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <p class="has-text-centered mt-2"><strong>Figure 5:</strong> Evidence Analysis I</p>
             </div>
              <!-- Evidence 2 -->
-             <div class="item">
+             <div class="figure-item" style="display: none;">
                 <div class="pdf-container">
-                    <iframe src="./assets/images/evi_2.pdf" width="100%" height="100%" style="border: none;"></iframe>
+                    <img src="./assets/images/evi_2.jpg" alt="Evidence Analysis II" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <p class="has-text-centered mt-2"><strong>Figure 6:</strong> Evidence Analysis II</p>
             </div>
@@ -606,12 +599,12 @@
         <!-- Manual Controls for Figures Carousel -->
         <div class="columns is-centered is-mobile mt-3">
             <div class="column is-narrow">
-                <button class="button is-primary is-rounded" onclick="moveCarousel('figures-carousel', 'previous')">
+                <button class="button is-primary is-rounded" onclick="switchFigure(-1)">
                     <span class="icon"><i class="fas fa-chevron-left"></i></span>
                 </button>
             </div>
             <div class="column is-narrow">
-                <button class="button is-primary is-rounded" onclick="moveCarousel('figures-carousel', 'next')">
+                <button class="button is-primary is-rounded" onclick="switchFigure(1)">
                     <span class="icon"><i class="fas fa-chevron-right"></i></span>
                 </button>
             </div>
@@ -983,6 +976,44 @@
         </div>
     </div>
 
+  </div>
+</section>
+
+<section class="section" id="contribution">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-10">
+        <div class="box has-background-light" style="border-left: 5px solid #3273dc; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+          <h2 class="title is-3 has-text-centered" style="margin-bottom: 1.5rem;">Call for Contribution</h2>
+          
+          <div class="content has-text-centered" style="margin-bottom: 2rem;">
+            <p class="is-size-5">
+              We invite the community to join us in extending and refining the Envision benchmark.
+            </p>
+          </div>
+
+          <div class="columns is-centered">
+            <!-- New Models -->
+            <div class="column is-6 has-text-centered">
+              <span class="icon is-large has-text-info mb-4"><i class="fas fa-robot fa-3x"></i></span>
+              <h4 class="title is-5">New Models</h4>
+              <p class="is-size-6">Evaluate and add results for the latest text-to-image or multimodal models.</p>
+            </div>
+          </div>
+
+          <div class="has-text-centered mt-5">
+            <p class="mb-4 is-size-6">
+              We are committed to regularly updating the leaderboard with the latest results.
+            </p>
+            <a href="https://github.com/opendatalab-raiser/Envision" class="button is-dark is-medium is-rounded hover-elevate">
+              <span class="icon"><i class="fab fa-github"></i></span>
+              <span>Submit Pull Request</span>
+            </a>
+            <p class="help mt-2">Submit your contributions via GitHub PR</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
