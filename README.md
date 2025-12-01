@@ -1,11 +1,13 @@
 # Envision
+<img width="1842" height="660" alt="946f8651929b13e5dca1d5b76963ae5d" src="https://github.com/user-attachments/assets/adb78d88-18f1-4246-b154-50d7e84fcd78" />
 
 Envision is a comprehensive benchmark designed for evaluating the unified understanding and sequential generation capabilities of multimodal models, specifically focusing on the modeling of **causal world processes**. The benchmark assesses a model's ability to generate coherent, physically plausible, and aesthetically pleasing sequences of images that follow a complex, step-by-step causal narrative.
 
 ---
 
 ## 🌟 Overview
-<img width="1826" height="420" alt="0a81c3cc7a4309091f488e64f47da22b" src="https://github.com/user-attachments/assets/a988b158-e95f-47dd-93ec-7d0afb94f041" />
+
+<img width="1816" height="422" alt="b14d6800c97e2dc34ac8e703d8b89802" src="https://github.com/user-attachments/assets/268a18bd-f72e-4c9c-91a0-aef7a1a4477a" />
 
 ---
 
