@@ -96,11 +96,10 @@ For the latest official results and model rankings on the Envision benchmark, pl
 
 We strongly encourage the research community to expand and enhance the Envision benchmark. We welcome contributions in the form of new model results, additional evaluation metrics, or new causal process categories to further challenge the capabilities of unified multimodal models.
 
-How to Contribute:
+**How to Contribute:**
 
-Submit New Results: If you have evaluated a novel model on the Envision benchmark using the provided eval.py script, please submit your quantitative results to us. We will periodically update the official leaderboard to reflect the state-of-the-art.
-
-Code and Data Extensions: We welcome pull requests (git pull request) for any improvements to the evaluation script, bug fixes, or the inclusion of supplementary causal event data to diversify the benchmark's coverage.
+1. **Submit New Results:** If you have evaluated a novel model on the Envision benchmark using the provided `eval.py` script, please submit your quantitative results to us. We will periodically update the official leaderboard to reflect the state-of-the-art.
+2. **Code and Data Extensions:** We welcome pull requests (`git pull request`) for any improvements to the evaluation script, bug fixes, or the inclusion of supplementary causal event data to diversify the benchmark's coverage.
 
 By collaborating, we can ensure the Envision benchmark remains a robust and evolving resource for measuring true world knowledge internalization and dynamic process modeling in multimodal generation.
 
