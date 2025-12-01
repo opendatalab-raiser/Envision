@@ -1,52 +1,59 @@
 // Service Worker for Envision Video Quality Assessment System
-const CACHE_NAME = 'imagine-vqa-v1';
-const urlsToCache = [
+const CACHE_NAME = 'envision-vqa-v1';
+const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
     '/styles.css',
     '/script.js',
-    'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap',
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
+    'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap'
 ];
 
-// Install event - cache resources
-self.addEventListener('install', function(event) {
+// Install Event
+self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then(function(cache) {
-                console.log('Opened cache');
-                return cache.addAll(urlsToCache);
+            .then((cache) => {
+                return cache.addAll(ASSETS_TO_CACHE);
             })
     );
 });
 
-// Fetch event - serve from cache when offline
-self.addEventListener('fetch', function(event) {
-    event.respondWith(
-        caches.match(event.request)
-            .then(function(response) {
-                // Return cached version or fetch from network
-                if (response) {
-                    return response;
-                }
-                return fetch(event.request);
-            }
-        )
-    );
-});
-
-// Activate event - clean up old caches
-self.addEventListener('activate', function(event) {
+// Activate Event - Cleanup old caches
+self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys().then(function(cacheNames) {
+        caches.keys().then((cacheNames) => {
             return Promise.all(
-                cacheNames.map(function(cacheName) {
+                cacheNames.map((cacheName) => {
                     if (cacheName !== CACHE_NAME) {
-                        console.log('Deleting old cache:', cacheName);
                         return caches.delete(cacheName);
                     }
                 })
             );
         })
+    );
+});
+
+// Fetch Event - Network First, then Cache
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        fetch(event.request)
+            .then((response) => {
+                // Clone response to cache it
+                if (!response || response.status !== 200 || response.type !== 'basic') {
+                    return response;
+                }
+                
+                const responseToCache = response.clone();
+                caches.open(CACHE_NAME)
+                    .then((cache) => {
+                        cache.put(event.request, responseToCache);
+                    });
+                
+                return response;
+            })
+            .catch(() => {
+                return caches.match(event.request);
+            })
     );
 });

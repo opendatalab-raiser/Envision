@@ -65,27 +65,31 @@
         }
     </script>
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+    <!-- Preload critical resources -->
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="script.js" as="script">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" as="style">
     
     <!-- Stylesheets with fallbacks -->
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
     
     <!-- Font Awesome with fallback -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👁️</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
     
     <!-- Critical CSS for above-the-fold content -->
     <style>
         /* Critical CSS for immediate rendering */
-        body { margin: 0; padding: 0; font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f9ff; }
+        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-        .header { text-align: center; margin-bottom: 50px; color: #1e293b; padding: 40px 0; }
-        .logo h1 { font-family: 'Google Sans', sans-serif; font-size: 4.5rem; font-weight: 800; margin-bottom: 10px; color: #0ea5e9; }
-        .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f9ff; display: flex; justify-content: center; align-items: center; z-index: 9999; }
-        .spinner { width: 50px; height: 50px; border: 4px solid rgba(14, 165, 233, 0.1); border-top: 4px solid #0ea5e9; border-radius: 50%; animation: spin 1s linear infinite; }
+        .header { text-align: center; margin-bottom: 50px; color: white; padding: 40px 0; }
+        .logo h1 { font-size: 4.5rem; font-weight: 800; margin-bottom: 10px; }
+        .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid white; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
@@ -157,158 +161,138 @@
         <div class="criteria-section" id="criteriaSection" style="display: none;">
             <h2><i class="fas fa-book"></i> Detailed Scoring Criteria</h2>
             <div class="criteria-grid">
+                
+                <!-- Consistency Dimension -->
                 <div class="criteria-card">
                     <h3><i class="fas fa-link"></i> Consistency (40%)</h3>
-                    <p>Evaluates Semantic, Factual, and Spatial-Temporal consistency across the entire 4-step sequence.</p>
+                    <p>Evaluate across the entire 4-step sequence</p>
+                    
                     <div class="sub-criteria">
                         <div class="sub-criterion">
-                            <h4>Semantic Consistency</h4>
-                            <p>Alignment between visual representation and conceptual meaning.</p>
-                            <details class="rubric-details">
-                                <summary>Scoring Rubric (0-5)</summary>
-                                <ul class="rubric-list">
-                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> Visual representation completely contradicts the core concept; the subject matter is wrong or misrepresented; the intended meaning is entirely lost or reversed.</li>
-                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Core theme is present but significantly distorted; key elements are misinterpreted or omitted; contradictory elements disrupt understanding.</li>
-                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Basic concept is recognizable but flawed in key details; the main idea is conveyed but with significant errors; some elements align while others are confusing.</li>
-                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Core concept is accurately captured, and the meaning is mostly clear; most elements align with the intended idea, but some minor inconsistencies persist.</li>
-                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> Both explicit and implicit meanings are captured well; a nuanced understanding is conveyed; rich semantic content with few inconsistencies.</li>
-                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Every conceptual nuance is perfectly expressed; visual representation fully aligns with intended meaning; flawless conceptual execution.</li>
-                                </ul>
-                            </details>
+                            <h4>Semantic Consistency (0-5)</h4>
+                            <p>Alignment between visual representation and conceptual meaning throughout the sequence, considering both explicit and implicit elements.</p>
+                            <ul class="rubric-list">
+                                <li><strong>0 (Rejected):</strong> Visual representation completely contradicts the core concept; the subject matter is wrong or misrepresented; the intended meaning is entirely lost or reversed; major misunderstanding of the explanation.</li>
+                                <li><strong>1 (Very Poor):</strong> Core theme is present but significantly distorted; key elements are misinterpreted or omitted; contradictory elements disrupt understanding; the overall narrative is unclear or misleading.</li>
+                                <li><strong>2 (Poor):</strong> Basic concept is recognizable but flawed in key details; the main idea is conveyed but with significant errors; some elements align with the intended meaning while others are incorrectly represented or confusing.</li>
+                                <li><strong>3 (Fair):</strong> Core concept is accurately captured, and the meaning is mostly clear; most elements align with the intended idea, but some minor semantic inconsistencies or unclear representations persist.</li>
+                                <li><strong>4 (Good):</strong> Both explicit and implicit meanings are captured well; a nuanced understanding of the concept is conveyed, and even subtle or abstract aspects are represented accurately; rich semantic content with few inconsistencies.</li>
+                                <li><strong>5 (Excellent):</strong> Every conceptual nuance is perfectly expressed; the visual representation fully aligns with the intended meaning, conveying deep understanding of all semantic layers; flawless conceptual execution with no distortions.</li>
+                            </ul>
                         </div>
                         <div class="sub-criterion">
-                            <h4>Factual Consistency</h4>
-                            <p>Adherence to empirical facts and logical relationships.</p>
-                            <details class="rubric-details">
-                                <summary>Scoring Rubric (0-5)</summary>
-                                <ul class="rubric-list">
-                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> Violates fundamental physical laws or scientific principles; contains logical contradictions; depicts completely impossible scenarios.</li>
-                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Core factual relationships are incorrect or distorted; frequent contradictions with known facts; significant inaccuracies in science or history.</li>
-                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Most factual relationships correct but notable inaccuracies exist; core facts plausible but details wrong or incomplete.</li>
-                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Majority of factual elements accurate; logical relationships well-maintained; only minor inaccuracies in specific domains.</li>
-                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> High level of factual accuracy; complex relationships correctly represented; specialized knowledge precisely applied.</li>
-                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Complete empirical accuracy; no detectable factual errors or logical contradictions; exemplary research and execution.</li>
-                                </ul>
-                            </details>
+                            <h4>Factual Consistency (0-5)</h4>
+                            <p>Adherence to empirical facts, scientific knowledge, and logical relationships, ensuring the representation is grounded in reality and subject to coherent reasoning.</p>
+                            <ul class="rubric-list">
+                                <li><strong>0 (Rejected):</strong> Violates fundamental physical laws or scientific principles; contains logical contradictions; depicts completely impossible scenarios; misrepresents core historical or factual knowledge.</li>
+                                <li><strong>1 (Very Poor):</strong> Core factual relationships are incorrect or distorted; frequent contradictions with known facts or logical reasoning; significant inaccuracies in science, history, or other factual domains; implausible scenarios that undermine credibility.</li>
+                                <li><strong>2 (Poor):</strong> While most factual relationships are generally correct, there are notable inaccuracies or misrepresentations; the core facts are plausible but some details are wrong or incomplete; minor factual errors that don't severely affect the overall portrayal.</li>
+                                <li><strong>3 (Fair):</strong> Majority of factual elements are accurate, and logical relationships are well-maintained; only minor inaccuracies in specific domains or specialized knowledge; generally plausible depiction with slight factual discrepancies.</li>
+                                <li><strong>4 (Good):</strong> The depiction shows a high level of factual accuracy; complex relationships are correctly represented; specialized knowledge is precisely applied, with only minor technical inaccuracies or inconsistencies.</li>
+                                <li><strong>5 (Excellent):</strong> Complete empirical accuracy; there are no detectable factual errors or logical contradictions; every aspect aligns perfectly with the relevant knowledge domains, demonstrating exemplary research and execution.</li>
+                            </ul>
                         </div>
                         <div class="sub-criterion">
-                            <h4>Spatial-Temporal Consistency</h4>
-                            <p>Coherence in spatial evolution and temporal progression.</p>
-                            <details class="rubric-details">
-                                <summary>Scoring Rubric (0-5)</summary>
-                                <ul class="rubric-list">
-                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> Spatial/temporal evolution entirely incoherent; no logical relationships; abrupt, random shifts; objects teleport without justification.</li>
-                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Significant inconsistencies hinder narrative flow; poor understanding of progression; movement and positioning illogical.</li>
-                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Some logical progression but evolution often unclear; movements plausible but lack cohesion or fail to respect causal logic.</li>
-                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Transitions mostly logical/plausible; smooth progression overall; occasional disruptions but general evolution remains coherent.</li>
-                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> Complex spatial/temporal changes well-executed; transitions smooth and consistent; sophisticated understanding of causal relationships.</li>
-                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Flawlessly consistent with causal logic; changes in position/timing align with story; impeccable execution of relationships.</li>
-                                </ul>
-                            </details>
+                            <h4>Spatial-Temporal Consistency (0-5)</h4>
+                            <p>Coherence in spatial evolution and temporal progression across the sequence, considering both short-term and long-term changes in the context of a causal narrative.</p>
+                            <ul class="rubric-list">
+                                <li><strong>0 (Rejected):</strong> Spatial and temporal evolution is entirely incoherent; there are no logical relationships between the states; abrupt, random shifts with no narrative consistency; objects or environments teleport without any narrative justification.</li>
+                                <li><strong>1 (Very Poor):</strong> Significant spatial and temporal inconsistencies that hinder narrative flow; poor understanding of progression and transitions; movement and positioning are illogical, with abrupt and unmotivated changes that disrupt continuity.</li>
+                                <li><strong>2 (Poor):</strong> Some logical progression is present, but spatial evolution and temporal transitions are often unclear or inconsistent; movements are somewhat plausible but lack cohesion in complex scenarios or fail to respect causal logic.</li>
+                                <li><strong>3 (Fair):</strong> Spatial and temporal transitions are mostly logical and plausible, with smooth progression overall; occasional disruptions or inconsistencies in movement or timing, but the general evolution remains coherent and the causal narrative holds.</li>
+                                <li><strong>4 (Good):</strong> Complex spatial evolution and temporal changes are well-executed; transitions are smooth and consistent; sophisticated understanding of causal relationships is applied with few minor inconsistencies that do not disrupt the overall flow.</li>
+                                <li><strong>5 (Excellent):</strong> Spatial and temporal evolution is flawlessly consistent with the narrative's causal logic; all changes in position, movement, and timing align with the story's progression and adhere to both immediate and long-term narrative consistency; impeccable execution of spatial-temporal relationships throughout the sequence.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
 
+                <!-- Physicality Dimension -->
                 <div class="criteria-card">
                     <h3><i class="fas fa-cube"></i> Physicality (40%)</h3>
-                    <p>Evaluates physical properties and dynamics across the sequence.</p>
+                    <p>Evaluate physical properties and dynamics across the sequence</p>
+                    
                     <div class="sub-criteria">
                         <div class="sub-criterion">
-                            <h4>Basic Properties</h4>
-                            <p>Accuracy in fundamental scene properties including object quantities, shapes, and proportions.</p>
-                            <details class="rubric-details">
-                                <summary>Scoring Rubric (0-5)</summary>
-                                <ul class="rubric-list">
-                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> Wrong number of major objects; impossible geometric relationships; completely unrealistic proportions.</li>
-                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Significant errors in object counts (>30% wrong); major shape distortions; poor geometric understanding.</li>
-                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Approximate object counts generally correct within 20%; recognizable but imperfect shapes; basic relationships mostly maintained.</li>
-                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Object counts within 15%; shapes accurately represented with minor flaws; good geometric consistency.</li>
-                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> Precise object quantities; well-defined shapes; sophisticated geometric relationships; excellent proportional accuracy.</li>
-                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Perfect object counts and distributions; mathematically precise shapes; flawless geometric relationships.</li>
-                                </ul>
-                            </details>
+                            <h4>Basic Properties (0-5)</h4>
+                            <p>Accuracy in fundamental scene properties including object quantities, basic shapes, geometric relationships, and size proportions across the sequence.</p>
+                            <ul class="rubric-list">
+                                <li><strong>0 (Rejected):</strong> Wrong number of major objects; impossible geometric relationships; completely unrealistic proportions; no understanding of basic spatial organization.</li>
+                                <li><strong>1 (Very Poor):</strong> Significant errors in object counts (>30% wrong); major shape distortions; poor geometric understanding; clearly wrong size relationships.</li>
+                                <li><strong>2 (Poor):</strong> Approximate object counts generally correct within 20%; recognizable but imperfect shapes; basic geometric relationships mostly maintained; roughly plausible proportions.</li>
+                                <li><strong>3 (Fair):</strong> Object counts within 15% of intended; shapes accurately represented with minor flaws; good geometric consistency; generally correct size relationships.</li>
+                                <li><strong>4 (Good):</strong> Precise object quantities; well-defined shapes; sophisticated geometric relationships; excellent proportional accuracy; professional-level spatial organization.</li>
+                                <li><strong>5 (Excellent):</strong> Perfect object counts and distributions; mathematically precise shapes and forms; flawless geometric relationships; exact proportional accuracy throughout.</li>
+                            </ul>
                         </div>
                         <div class="sub-criterion">
-                            <h4>Dynamics & Interactivity</h4>
-                            <p>Realism in motion trajectories, force interactions, and object behaviors.</p>
-                            <details class="rubric-details">
-                                <summary>Scoring Rubric (0-5)</summary>
-                                <ul class="rubric-list">
-                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> Motion trajectories completely unrealistic; impossible force interactions; objects interact in physically impossible ways.</li>
-                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Major motion trajectory errors; unrealistic force applications; poor understanding of dynamics; interaction patterns wrong.</li>
-                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Basic motion trajectories generally plausible; simple force interactions mostly correct; adequate but imperfect dynamics.</li>
-                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Good motion trajectory realism; proper force applications; technically sound dynamics; convincing interaction patterns.</li>
-                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> Sophisticated motion trajectories; complex force interactions handled well; professional-level dynamics; realistic interactions.</li>
-                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Perfect motion physics throughout; flawless force interactions; exemplary dynamics; indistinguishable from real interactions.</li>
-                                </ul>
-                            </details>
+                            <h4>Dynamics and Interactivity (0-5)</h4>
+                            <p>Realism in physical dynamics including motion trajectories, force interactions, fluid/rigid body behaviors, and object interactions across the sequence.</p>
+                            <ul class="rubric-list">
+                                <li><strong>0 (Rejected):</strong> Motion trajectories completely unrealistic; impossible force interactions; no understanding of dynamics; objects interact in physically impossible ways; fluid/rigid body behaviors completely wrong.</li>
+                                <li><strong>1 (Very Poor):</strong> Major motion trajectory errors; unrealistic force applications; poor understanding of dynamics; clearly wrong interaction patterns; fluid behaviors significantly distorted.</li>
+                                <li><strong>2 (Poor):</strong> Basic motion trajectories generally plausible; simple force interactions mostly correct; adequate but imperfect dynamics; generally believable interactions with noticeable flaws.</li>
+                                <li><strong>3 (Fair):</strong> Good motion trajectory realism; proper force applications; technically sound dynamics; convincing interaction patterns with minor flaws; fluid/rigid body behaviors mostly correct.</li>
+                                <li><strong>4 (Good):</strong> Sophisticated motion trajectories; complex force interactions handled well; professional-level dynamics; realistic and nuanced object interactions; accurate fluid/rigid body simulations.</li>
+                                <li><strong>5 (Excellent):</strong> Perfect motion physics throughout; flawless force interactions; exemplary dynamics in all aspects; indistinguishable from real physical interactions; professional-grade fluid/rigid body behaviors.</li>
+                            </ul>
                         </div>
                         <div class="sub-criterion">
-                            <h4>Physical Reliability</h4>
+                            <h4>Physical Reliability (0-5)</h4>
                             <p>Adherence to fundamental physical laws across the sequence.</p>
-                            <details class="rubric-details">
-                                <summary>Scoring Rubric (0-5)</summary>
-                                <ul class="rubric-list">
-                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> Spatial evolution completely illogical/random; objects appear/disappear without cause; chaotic movements.</li>
-                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Major inconsistencies in movement/evolution; poor understanding of physical progression; frequent illogical transitions.</li>
-                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Basic spatial progression generally logical but has flaws; some movements lack smoothness; plausible overall but with inconsistencies.</li>
-                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Spatial evolution mostly logical/coherent; reasonable continuity; minor issues in timing or complex transitions.</li>
-                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> Spatial progression consistently logical; complex movements handled adeptly; strong temporal coherence.</li>
-                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Spatial-temporal evolution perfectly logical, fluid, physically plausible; flawless continuity and natural progression.</li>
-                                </ul>
-                            </details>
+                            <ul class="rubric-list">
+                                <li><strong>0 (Rejected):</strong> Spatial evolution is completely illogical or random; objects appear, disappear, or teleport without cause; no discernible progression; chaotic and physically impossible movements.</li>
+                                <li><strong>1 (Very Poor):</strong> Major inconsistencies in object movement or scene evolution; poor understanding of physical progression; frequent illogical transitions; severe continuity errors in position or timing.</li>
+                                <li><strong>2 (Poor):</strong> Basic spatial progression is generally logical but contains noticeable flaws; some object movements or transitions lack smoothness; plausible overall but with clear inconsistencies in complex actions.</li>
+                                <li><strong>3 (Fair):</strong> Spatial evolution is mostly logical and coherent; object movements show reasonable continuity; minor issues in timing or complex transitions; generally smooth but not fully polished.</li>
+                                <li><strong>4 (Good):</strong> Spatial progression is consistently logical and well-executed; complex movements and transitions are handled adeptly; strong temporal coherence with only subtle imperfections.</li>
+                                <li><strong>5 (Excellent):</strong> Spatial-temporal evolution is perfectly logical, fluid, and physically plausible; all movements and transitions demonstrate flawless continuity and natural progression; exemplary understanding of spatiotemporal dynamics.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
 
+                <!-- Aesthetic Dimension -->
                 <div class="criteria-card">
                     <h3><i class="fas fa-palette"></i> Aesthetic (20%)</h3>
-                    <p>Evaluates overall aesthetic quality across the sequence.</p>
+                    <p>Evaluate overall aesthetic quality across the sequence</p>
+                    
                     <div class="sub-criteria">
                         <div class="sub-criterion">
-                            <h4>Expressiveness</h4>
-                            <p>The emotional impact and visual storytelling conveyed through the sequence.</p>
-                            <details class="rubric-details">
-                                <summary>Scoring Rubric (0-5)</summary>
-                                <ul class="rubric-list">
-                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> No emotional depth or visual narrative; elements lack cohesion; chaotic design with no connection.</li>
-                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Minimal emotional expression; poorly communicated narrative; conflicting elements detract from message.</li>
-                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Simple arrangement with limited expression; some narrative effort but flow is basic; uneven balance.</li>
-                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Clear/effective emotional expression; visual flow supports narrative; balanced elements guide attention.</li>
-                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> Strong emotional engagement; dynamic arrangement supports compelling narrative; sophisticated design choices.</li>
-                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Exceptional emotional resonance; perfectly executed narrative; masterful expressiveness telling a compelling story.</li>
-                                </ul>
-                            </details>
+                            <h4>Expressiveness (0-5)</h4>
+                            <p>The emotional impact and visual storytelling conveyed through the arrangement of visual elements, balance, and flow across the sequence.</p>
+                            <ul class="rubric-list">
+                                <li><strong>0 (Rejected):</strong> No emotional depth or clear visual narrative; elements lack cohesion or meaning; chaotic and incoherent design with no emotional connection.</li>
+                                <li><strong>1 (Very Poor):</strong> Minimal emotional expression; poorly communicated visual narrative; conflicting elements and arrangement that detract from the intended message.</li>
+                                <li><strong>2 (Poor):</strong> Simple visual arrangement with limited emotional expression; some effort at narrative is apparent, but the flow feels basic or incomplete; uneven balance in visual elements.</li>
+                                <li><strong>3 (Fair):</strong> Clear and effective emotional expression; visual flow supports the intended narrative; balanced elements that guide the viewer's attention with good use of space and composition.</li>
+                                <li><strong>4 (Good):</strong> Strong emotional engagement; dynamic arrangement that supports a compelling visual narrative; sophisticated design choices that enhance emotional tone and storytelling.</li>
+                                <li><strong>5 (Excellent):</strong> Exceptional emotional resonance; perfectly executed visual narrative that captures and amplifies the theme; masterful expressiveness in the arrangement of elements that tells a compelling story.</li>
+                            </ul>
                         </div>
                         <div class="sub-criterion">
-                            <h4>Artistic Quality</h4>
-                            <p>Overall aesthetic appeal, style coherence, and artistic merit.</p>
-                            <details class="rubric-details">
-                                <summary>Scoring Rubric (0-5)</summary>
-                                <ul class="rubric-list">
-                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> No coherent style; elements clash severely; visually painful; complete lack of artistic consideration.</li>
-                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Inappropriate style choices; poor visual appeal; unbalanced elements; amateurish execution.</li>
-                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Functional but unrefined aesthetic; adequate visual appeal; simple style application; limited effectiveness.</li>
-                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Coherent style; good aesthetic relationships; appropriate tone; technically sound execution; pleasing appearance.</li>
-                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> Sophisticated artistic execution; strong emotional impact; complex relationships handled well; professional quality.</li>
-                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Perfect aesthetic harmony; innovative style; flawless execution; exemplary storytelling; world-class design.</li>
-                                </ul>
-                            </details>
+                            <h4>Artistic Quality (0-5)</h4>
+                            <p>Overall aesthetic appeal, style coherence, and artistic merit across the sequence.</p>
+                            <ul class="rubric-list">
+                                <li><strong>0 (Rejected):</strong> No coherent style; elements clash severely; visually painful to view; complete lack of artistic consideration.</li>
+                                <li><strong>1 (Very Poor):</strong> Inappropriate style choices; poor visual appeal; unbalanced aesthetic elements; amateurish execution; distracting aesthetic flaws.</li>
+                                <li><strong>2 (Poor):</strong> Functional but unrefined aesthetic; adequate visual appeal; simple style application; limited artistic effectiveness.</li>
+                                <li><strong>3 (Fair):</strong> Coherent style with good aesthetic relationships; appropriate emotional tone; technically sound artistic execution; generally pleasing appearance.</li>
+                                <li><strong>4 (Good):</strong> Sophisticated artistic execution; strong emotional impact through style; complex aesthetic relationships handled well; professional artistic quality.</li>
+                                <li><strong>5 (Excellent):</strong> Perfect aesthetic harmony throughout; innovative and emotionally resonant style; flawless artistic execution; exemplary aesthetic storytelling; world-class artistic design.</li>
+                            </ul>
                         </div>
                         <div class="sub-criterion">
-                            <h4>Authenticity</h4>
-                            <p>The believability and naturalness of the elements.</p>
-                            <details class="rubric-details">
-                                <summary>Scoring Rubric (0-5)</summary>
-                                <ul class="rubric-list">
-                                    <li><span class="score-badge score-0">0</span> <strong>Rejected:</strong> Sequence looks completely artificial; lacks realism; obvious artifacts; cartoonish with no reality connection.</li>
-                                    <li><span class="score-badge score-1">1</span> <strong>Very Poor:</strong> Major unrealistic elements dominate; obvious artifacts; unnatural lighting/textures; feels clearly synthetic.</li>
-                                    <li><span class="score-badge score-2">2</span> <strong>Poor:</strong> Generally believable but noticeable artificial elements; some unnatural aspects; overall somewhat convincing.</li>
-                                    <li><span class="score-badge score-3">3</span> <strong>Fair:</strong> Good level of realism; minor artificial elements; generally convincing; some minor issues in complex areas.</li>
-                                    <li><span class="score-badge score-4">4</span> <strong>Good:</strong> Very believable; approaches photographic quality; subtle details enhance realism; artificial elements barely detectable.</li>
-                                    <li><span class="score-badge score-5">5</span> <strong>Excellent:</strong> Indistinguishable from real photography; perfect realism; flawless material representation; seamless authenticity.</li>
-                                </ul>
-                            </details>
+                            <h4>Authenticity (0-5)</h4>
+                            <p>The believability and naturalness of the elements, ensuring that the sequence aligns with the intended reality or narrative.</p>
+                            <ul class="rubric-list">
+                                <li><strong>0 (Rejected):</strong> The sequence looks completely artificial and lacks any attempt at realism; obvious digital artifacts; cartoonish appearance with no connection to reality.</li>
+                                <li><strong>1 (Very Poor):</strong> Major unrealistic elements dominate the sequence; obvious digital artifacts; unnatural lighting, textures, or distortions; the image feels clearly synthetic.</li>
+                                <li><strong>2 (Poor):</strong> Generally believable but with noticeable artificial elements; some aspects appear unnatural or inconsistent in realism, but the overall image is somewhat convincing.</li>
+                                <li><strong>3 (Fair):</strong> Good level of realism with only minor artificial elements; generally convincing depiction of reality; some minor issues in complex areas (lighting, texture, etc.).</li>
+                                <li><strong>4 (Good):</strong> Very believable image approaching photographic quality; subtle details enhance realism, and artificial elements are barely detectable.</li>
+                                <li><strong>5 (Excellent):</strong> Indistinguishable from real photography; perfect realism in all aspects; flawless material representation and expert-level rendering that conveys authenticity seamlessly.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -432,16 +416,12 @@
                         <span id="consistencyBreakdown">0.0</span>
                     </div>
                     <div class="breakdown-item">
-                        <span>Causality:</span>
-                        <span id="causalityBreakdown">0.0</span>
+                        <span>Physicality:</span>
+                        <span id="physicalityBreakdown">0.0</span>
                     </div>
                     <div class="breakdown-item">
                         <span>Aesthetic:</span>
                         <span id="aestheticBreakdown">0.0</span>
-                    </div>
-                    <div class="breakdown-item">
-                        <span>Physicality:</span>
-                        <span id="physicalityBreakdown">0.0</span>
                     </div>
                 </div>
             </div>
@@ -500,7 +480,8 @@
                                             <div class="metric-description">Linear relationship strength</div>
                                         </div>
                                     </div>
-                                    
+                                    <!-- Other metrics remain the same -->
+
                                     <div class="metric-card">
                                         <div class="metric-icon">
                                             <i class="fas fa-chart-line"></i>
@@ -514,12 +495,12 @@
                                     <div class="metric-card">
                                         <div class="metric-icon">
                                             <i class="fas fa-ruler"></i>
-                                        </div>
+                                </div>
                                         <div class="metric-content">
                                             <h5>Mean Absolute Error</h5>
                                             <div class="metric-value" id="maeValue">-</div>
                                             <div class="metric-description">Average difference</div>
-                                        </div>
+                            </div>
                                     </div>
                                     <div class="metric-card">
                                         <div class="metric-icon">

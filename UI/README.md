@@ -1,4 +1,4 @@
-# Envision - Advanced Video Quality Assessment System
+# IMAGINE - Advanced Video Quality Assessment System
 
 A comprehensive video quality evaluation platform with AI-powered assessment and correlation analysis capabilities.
 
@@ -159,4 +159,4 @@ const model = "Qwen2.5-VL-72B-Instruct";
 
 ---
 
-**Envision** - Where human expertise meets AI precision in video quality assessment.
+**IMAGINE** - Where human expertise meets AI precision in video quality assessment.
