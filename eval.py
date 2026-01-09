@@ -9,15 +9,12 @@ import math
 from pathlib import Path
 from typing import Dict, Any, List, Tuple
 from datetime import datetime
-
-# 按照 4:4:2 的比例定义权重（调整后）
 DIMENSION_WEIGHTS = {
     "consistency": 0.4,      # 40% (4/10)
     "physicality": 0.4,      # 40% (4/10)  
     "aesthetic": 0.2         # 20% (2/10)
 }
 
-# 各子维度在父维度内的权重（等权重，调整后）
 SUB_DIMENSION_WEIGHTS = {
     "consistency": {
         "semantic_consistency": 0.33,
@@ -83,22 +80,18 @@ def load_json(path: str) -> Dict[str, Dict]:
 def extract_scores(txt: str) -> Dict[str, float]:
     """Extract scores from evaluation text using comprehensive patterns."""
     patterns = [
-        # 一致性维度
         (r"\*{0,2}Semantic Consistency\*{0,2}\s*[::]?\s*(\d)", "semantic_consistency"),
         (r"\*{0,2}Factual Consistency\*{0,2}\s*[::]?\s*(\d)", "factual_consistency"),
         (r"\*{0,2}Spatial-Temporal Consistency\*{0,2}\s*[::]?\s*(\d)", "spatial_temporal_consistency"),
         
-        # 美学维度（更新）
         (r"\*{0,2}Expressiveness\*{0,2}\s*[::]?\s*(\d)", "expressiveness"),
         (r"\*{0,2}Artistic Quality\*{0,2}\s*[::]?\s*(\d)", "artistic_quality"),
         (r"\*{0,2}Authenticity\*{0,2}\s*[::]?\s*(\d)", "authenticity"),
         
-        # 物理性维度
         (r"\*{0,2}Basic Properties\*{0,2}\s*[::]?\s*(\d)", "basic_properties"),
         (r"\*{0,2}Dynamics and Interactivity\*{0,2}\s*[::]?\s*(\d)", "dynamics_interactivity"),
         (r"\*{0,2}Physical Reliability\*{0,2}\s*[::]?\s*(\d)", "physical_reliability"),
         
-        # 宽松匹配模式（更新）
         (r"(?i)(Semantic Consistency|Factual Consistency|Spatial-Temporal Consistency|Expressiveness|Artistic Quality|Authenticity|Basic Properties|Dynamics and Interactivity|Physical Reliability)\s*[:：]?\s*(\d)", "flexible_match")
     ]
     
@@ -152,12 +145,11 @@ def find_image_paths(index: str, image_dir: str, steps: List[int]) -> Dict[int, 
     # Convert index to string and handle zero-padding
     index_str = str(index)
     
-    # 尝试多种可能的目录结构
     possible_dirs = [
         os.path.join(image_dir, f"index_{index_str.zfill(4)}"),
         os.path.join(image_dir, f"index_{index_str}"),
         os.path.join(image_dir, index_str),
-        image_dir  # 直接在当前目录查找
+        image_dir
     ]
     
     target_dir = None
@@ -171,7 +163,6 @@ def find_image_paths(index: str, image_dir: str, steps: List[int]) -> Dict[int, 
         return image_paths
     
     for step in steps:
-        # 尝试多种可能的文件名模式
         possible_filenames = [
             f"index_{index_str.zfill(4)}_step_{step}.png",
             f"index_{index_str}_step_{step}.png",
@@ -194,7 +185,6 @@ def find_image_paths(index: str, image_dir: str, steps: List[int]) -> Dict[int, 
     return image_paths
 
 def get_grade(score: float) -> str:
-    """根据分数返回等级"""
     if score >= 4.5:
         return "Excellent"
     elif score >= 4.0:
@@ -209,9 +199,6 @@ def get_grade(score: float) -> str:
         return "Very Poor"
 
 def calculate_comprehensive_scores(individual_scores: Dict) -> Dict:
-    """计算综合评分 - 按照4:4:2权重"""
-    
-    # 提取各维度分数
     consistency_scores = {
         "semantic_consistency": individual_scores.get("semantic_consistency", 0),
         "factual_consistency": individual_scores.get("factual_consistency", 0),
@@ -230,7 +217,6 @@ def calculate_comprehensive_scores(individual_scores: Dict) -> Dict:
         "physical_reliability": individual_scores.get("physical_reliability", 0)
     }
     
-    # 计算维度平均分（加权）
     consistency_avg = sum(
         consistency_scores[dim] * SUB_DIMENSION_WEIGHTS["consistency"][dim] 
         for dim in consistency_scores
@@ -246,7 +232,6 @@ def calculate_comprehensive_scores(individual_scores: Dict) -> Dict:
         for dim in physicality_scores
     )
     
-    # 计算总体分数（按照4:4:2权重）
     overall_score = (
         consistency_avg * DIMENSION_WEIGHTS["consistency"] +
         physicality_avg * DIMENSION_WEIGHTS["physicality"] +
@@ -254,16 +239,13 @@ def calculate_comprehensive_scores(individual_scores: Dict) -> Dict:
     )
     
     return {
-        # 原始分数
         **individual_scores,
         
-        # 维度平均分
         "consistency_score": round(consistency_avg, 2),
         "aesthetic_score": round(aesthetic_avg, 2),
         "physicality_score": round(physicality_avg, 2),
         "overall_score": round(overall_score, 2),
         
-        # 权重信息
         "weight_info": {
             "consistency_weight": DIMENSION_WEIGHTS["consistency"],
             "physicality_weight": DIMENSION_WEIGHTS["physicality"], 
@@ -271,17 +253,14 @@ def calculate_comprehensive_scores(individual_scores: Dict) -> Dict:
             "total_weight": sum(DIMENSION_WEIGHTS.values())
         },
         
-        # 简单平均分（不加权，用于对比）
         "consistency_avg_simple": round(sum(consistency_scores.values()) / len(consistency_scores), 2),
         "aesthetic_avg_simple": round(sum(aesthetic_scores.values()) / len(aesthetic_scores), 2),
         "physicality_avg_simple": round(sum(physicality_scores.values()) / len(physicality_scores), 2),
         "overall_avg_simple": round(sum(individual_scores.values()) / len(individual_scores), 2),
         
-        # 通过率统计
         "pass_rate_3": round(sum(1 for score in individual_scores.values() if score >= 3) / len(individual_scores), 2),
         "pass_rate_4": round(sum(1 for score in individual_scores.values() if score >= 4) / len(individual_scores), 2),
         
-        # 等级评定
         "overall_grade": get_grade(overall_score),
         "consistency_grade": get_grade(consistency_avg),
         "aesthetic_grade": get_grade(aesthetic_avg),
@@ -305,7 +284,7 @@ def build_sequence_evaluation_messages(sequence_data: Dict, image_base64_list: L
     # Build image content with proper formatting
     image_contents = []
     for i, image_base64 in enumerate(image_base64_list):
-        if image_base64:  # 只添加成功编码的图像
+        if image_base64:  
             image_contents.append({
                 "type": "image_url",
                 "image_url": {
@@ -531,13 +510,11 @@ def evaluate_sequence(index: str, sequence_data: Dict, cfg: Dict) -> Tuple[Dict,
                 "individual_scores": scores,
                 "comprehensive_scores": comprehensive_scores
             },
-            {  # score record (简化版，用于分析)
+            { 
                 "index": index,
                 "category": sequence_data["category"],
                 "process_type": sequence_data["process_type"],
-                # 原始分数
                 **scores,
-                # 综合分数
                 "consistency_score": comprehensive_scores["consistency_score"],
                 "aesthetic_score": comprehensive_scores["aesthetic_score"],
                 "physicality_score": comprehensive_scores["physicality_score"],
@@ -554,7 +531,6 @@ def evaluate_sequence(index: str, sequence_data: Dict, cfg: Dict) -> Tuple[Dict,
         return None
 
 def calculate_std(scores: List[float]) -> float:
-    """计算标准差"""
     if len(scores) <= 1:
         return 0.0
     mean = sum(scores) / len(scores)
@@ -562,7 +538,6 @@ def calculate_std(scores: List[float]) -> float:
     return math.sqrt(variance)
 
 def analyze_comprehensive_results(all_scores: List[Dict]) -> Dict:
-    """分析综合评分结果"""
     
     if not all_scores:
         return {}
@@ -573,14 +548,12 @@ def analyze_comprehensive_results(all_scores: List[Dict]) -> Dict:
         "ranking": {},
         "summary": {}
     }
-    
-    # 收集所有综合分数
+
     consistency_scores = [s.get("consistency_score", 0) for s in all_scores]
     aesthetic_scores = [s.get("aesthetic_score", 0) for s in all_scores]
     physicality_scores = [s.get("physicality_score", 0) for s in all_scores]
     overall_scores = [s.get("overall_score", 0) for s in all_scores]
     
-    # 维度性能分析
     for dim_name, scores in [
         ("consistency", consistency_scores),
         ("aesthetic", aesthetic_scores),
@@ -594,7 +567,6 @@ def analyze_comprehensive_results(all_scores: List[Dict]) -> Dict:
             "std": round(calculate_std(scores), 2)
         }
     
-    # 按总体分数排序
     sorted_indices = sorted(
         [(i, s["overall_score"]) for i, s in enumerate(all_scores)],
         key=lambda x: x[1],
@@ -606,7 +578,6 @@ def analyze_comprehensive_results(all_scores: List[Dict]) -> Dict:
         "bottom_5": [{"index": all_scores[i]["index"], "score": all_scores[i]["overall_score"]} for i, _ in sorted_indices[-5:]]
     }
     
-    # 总体统计
     analysis["summary"] = {
         "total_sequences": len(all_scores),
         "weight_ratio": "Consistency:Physicality:Aesthetic = 4:4:2",
@@ -704,7 +675,6 @@ def main():
     save_results(full_sorted, cfg["result_files"]["full"], cfg)
     save_results(score_sorted, cfg["result_files"]["scores"], cfg)
 
-    # 生成分析报告
     if score_sorted:
         analysis = analyze_comprehensive_results(score_sorted)
         analysis_path = os.path.join(cfg["output_dir"], "analysis_report.json")
@@ -716,7 +686,6 @@ def main():
             }, f, ensure_ascii=False, indent=2)
         print(f"Analysis report saved to: {analysis_path}")
         
-        # 打印简要报告
         print("\n=== EVALUATION SUMMARY ===")
         print(f"Total sequences evaluated: {analysis['summary']['total_sequences']}")
         print(f"Overall average score: {analysis['summary']['average_overall_score']}")
